@@ -1,24 +1,21 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import mongoose from "mongoose";
+import dotenv from 'dotenv'
+dotenv.config()
+const MONGODB_URI = process.env.MONGODB_URI as string;
 
-dotenv.config();
-
-const mongoURL = process.env.MONGODB_URL  as string;
-
-if (!mongoURL) {
-     throw new Error("MONGODB_URL is not defined in environment variables");
-     console.error("MONGODB_URL is not defined in environment variables");
+if (!MONGODB_URI) {
+  throw new Error("MONGODB_URI is Missing");
 }
 
-export const connectDb = async () => {
-    try {
-        await mongoose.connect(mongoURL, {
-            serverSelectionTimeoutMS: 5000,
-            bufferCommands: false,
-        })
+export async function connectDb() {
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000,
+    });
 
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        console.log("Error connecting to MongoDB:", error);
-    }
+    console.log("MongoDB connected");
+  } catch (error) {
+    console.error("MongoDB connection failed:", error);
+    process.exit(1); 
+  }
 }

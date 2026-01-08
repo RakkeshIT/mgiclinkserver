@@ -10,10 +10,9 @@ const app = express()
 app.use(cors({origin: ['http://localhost:3000','https://magiclinkfrontend-1dvypkkck-rakkeshs-projects-38aee0d0.vercel.app'], credentials: true}))
 app.use(express.json())
 app.use(cookieParser())
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 
 connectDb()
-
 app.use('/', auth)
 
 app.listen(PORT, () => {
