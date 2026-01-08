@@ -69,7 +69,7 @@ router.post("/verify", async (req: Request, res: Response) => {
     res.cookie("auth-cookie", session, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "none",
       maxAge: 1 * 60 * 60 * 1000,
       path: "/",
     });
