@@ -6,6 +6,7 @@ import User from "../../models/User";
 import Token from "../../models/Token";
 import { generateToken } from "../../utils/generateToken";
 import { sendMail } from "../../utils/sendMail";
+import crypto from "crypto";
 dotenv.config();
 const router = Router();
 
@@ -23,19 +24,13 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     const token = generateToken();
+    const publicId = crypto.randomUUID()
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
-    await Token.create({ userId: user._id, token, expiresAt });
+    await Token.create({ userId: user._id, token, public_id:publicId, expiresAt });
 
-    await sendMail(email, token);
+    await sendMail(email, publicId);
 
-    res.cookie('auth-cookie', token, {
-       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
-      maxAge: 1 * 60 * 60 * 1000,
-      path: "/",
-    })
     return res
       .status(201)
       .json({ message: "If the email exists, a login link has been sent" });
@@ -47,14 +42,14 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/verify", async (req: Request, res: Response) => {
+router.get("/verify/:id", async (req: Request, res: Response) => {
   try {
-    const { token } = req.query;
+    const { id } = req.params;
 
-    if (!token) {
+    if (!id) {
       return res.status(400).json({ message: "Token is Required" });
     }
-    const tokenDoc = await Token.findOne({ token });
+    const tokenDoc = await Token.findOne({ public_id: id });
 
     if (!tokenDoc || tokenDoc.used || tokenDoc.expiresAt < new Date()) {
       return res

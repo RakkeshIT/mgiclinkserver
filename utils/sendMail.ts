@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendMail = async (email: string, token: string) => {
     const URL = process.env.NODE_ENV === 'production' ? process.env.LIVE_BASE_URL : process.env.BASE_URL
-    const link = `${URL}/dashboard?token=${token}`
+    const link = `${URL}/verify/${token}`
 
     await transporter.sendMail(
         {

@@ -10,6 +10,7 @@ const app = express()
 app.use(cors({origin: ['http://localhost:3000','https://magiclinkfrontend.vercel.app'], credentials: true}))
 app.use(express.json())
 app.use(cookieParser())
+app.set('trust proxy', 1); 
 const PORT = process.env.PORT || 5000;
 
 connectDb()
