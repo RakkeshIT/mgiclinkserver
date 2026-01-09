@@ -24,10 +24,15 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     const token = generateToken();
-    const publicId = crypto.randomUUID()
+    const publicId = crypto.randomUUID();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
 
-    await Token.create({ userId: user._id, token, public_id:publicId, expiresAt });
+    await Token.create({
+      userId: user._id,
+      token,
+      public_id: publicId,
+      expiresAt,
+    });
 
     await sendMail(email, publicId);
 
@@ -70,15 +75,17 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
     );
 
     res.cookie("auth-cookie", session, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    domain: "magiclinkfrontend.vercel.app", 
-    maxAge: 24 * 60 * 60 * 1000,
-    path: "/"
-});
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      domain: ".vercel.app",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/",
+    });
     res.setHeader("Authorization", `Bearer ${session}`);
-    return res.status(200).json({ success: true, message: "Logged in", tokenDoc, session });
+    return res
+      .status(200)
+      .json({ success: true, message: "Logged in", tokenDoc, session });
   } catch (error) {
     console.error("Unexpected error :", error);
     return res
