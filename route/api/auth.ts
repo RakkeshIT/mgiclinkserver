@@ -73,7 +73,7 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
     httpOnly: true,
     secure: true,
     sameSite: "none",
-    domain: ".vercel.app", 
+    domain: "magiclinkfrontend.vercel.app", 
     maxAge: 24 * 60 * 60 * 1000,
     path: "/"
 });
