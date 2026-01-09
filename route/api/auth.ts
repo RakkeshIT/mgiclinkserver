@@ -71,14 +71,13 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
 
     res.cookie("auth-cookie", session, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
-      maxAge: 1 * 60 * 60 * 1000,
-      path: "/",
+      secure: true,
+      sameSite: "none",
+      maxAge: 24 * 60 * 60 * 1000
     });
 
     await tokenDoc.deleteOne();
-    return res.status(200).json({ success: true, message: "Logged in" });
+    return res.status(200).json({ success: true, message: "Logged in", tokenDoc, session });
   } catch (error) {
     console.error("Unexpected error :", error);
     return res
