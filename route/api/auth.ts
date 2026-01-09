@@ -71,22 +71,13 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
     const session = jwt.sign(
       { userId: tokenDoc.userId },
       process.env.JWT_SECRET as string,
-      { expiresIn: "1d" }
+      { expiresIn: "1h" }
     );
     console.log("Generated Token:", session);
-
-    res.cookie("auth-cookie", session, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 24 * 60 * 60 * 1000,
-      path: "/",
-    });
     console.log("SIGNUP HIT EXPRESS");
-
     return res
       .status(200)
-      .json({ success: true, message: "Logged in", tokenDoc, session });
+      .json({ success: true, message: "Logged in", tokenDoc, accessToken:session });
   } catch (error) {
     console.error("Unexpected error :", error);
     return res
@@ -96,7 +87,7 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/logout", async (req: Request, res: Response) => {
-  res.clearCookie("auth-cookie", {
+  res.clearCookie("auth_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
