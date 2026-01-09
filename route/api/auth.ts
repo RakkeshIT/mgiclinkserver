@@ -75,7 +75,7 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
       sameSite: "none",
       maxAge: 24 * 60 * 60 * 1000
     });
-
+    res.setHeader("Authorization", `Bearer ${session}`);
     return res.status(200).json({ success: true, message: "Logged in", tokenDoc, session });
   } catch (error) {
     console.error("Unexpected error :", error);
