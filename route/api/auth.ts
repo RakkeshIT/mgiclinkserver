@@ -76,7 +76,6 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000
     });
 
-    await tokenDoc.deleteOne();
     return res.status(200).json({ success: true, message: "Logged in", tokenDoc, session });
   } catch (error) {
     console.error("Unexpected error :", error);
