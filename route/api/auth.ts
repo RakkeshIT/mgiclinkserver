@@ -82,7 +82,7 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
       path: "/",
     });
-        console.log("SIGNUP HIT EXPRESS");
+    console.log("SIGNUP HIT EXPRESS");
 
     return res
       .status(200)
