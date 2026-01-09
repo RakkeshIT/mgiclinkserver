@@ -70,9 +70,10 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
     }
     const session = jwt.sign(
       { userId: tokenDoc.userId },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      process.env.JWT_SECRET as string,
+      { expiresIn: "1d" }
     );
+    console.log("Generated Token:", session);
 
     res.cookie("auth-cookie", session, {
       httpOnly: true,
@@ -81,7 +82,8 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
       path: "/",
     });
-    res.setHeader("Authorization", `Bearer ${session}`);
+        console.log("SIGNUP HIT EXPRESS");
+
     return res
       .status(200)
       .json({ success: true, message: "Logged in", tokenDoc, session });
