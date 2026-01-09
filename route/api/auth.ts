@@ -70,13 +70,13 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
     );
 
     res.cookie("auth-cookie", session, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      domain: '.vercel.app',
-      maxAge: 24 * 60 * 60 * 1000,
-      path: "/"
-    });
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    domain: ".vercel.app", 
+    maxAge: 24 * 60 * 60 * 1000,
+    path: "/"
+});
     res.setHeader("Authorization", `Bearer ${session}`);
     return res.status(200).json({ success: true, message: "Logged in", tokenDoc, session });
   } catch (error) {
