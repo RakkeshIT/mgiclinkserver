@@ -28,6 +28,14 @@ router.post("/login", async (req: Request, res: Response) => {
     await Token.create({ userId: user._id, token, expiresAt });
 
     await sendMail(email, token);
+
+    res.cookie('auth-cookie', token, {
+       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
+      maxAge: 1 * 60 * 60 * 1000,
+      path: "/",
+    })
     return res
       .status(201)
       .json({ message: "If the email exists, a login link has been sent" });
@@ -39,7 +47,7 @@ router.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/verify", async (req: Request, res: Response) => {
+router.get("/verify", async (req: Request, res: Response) => {
   try {
     const { token } = req.query;
 
@@ -69,7 +77,7 @@ router.post("/verify", async (req: Request, res: Response) => {
     res.cookie("auth-cookie", session, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
       maxAge: 1 * 60 * 60 * 1000,
       path: "/",
     });
