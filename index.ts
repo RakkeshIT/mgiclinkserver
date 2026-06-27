@@ -5,7 +5,7 @@ import cookieParser = require('cookie-parser')
 import { connectDb } from './utils/db'
 
 // API's
-import auth from './route/api/auth'
+import auth from './route/api/auth.route'
 import Queation from './route/api/queation.route'
 
 dotenv.config()
@@ -20,6 +20,13 @@ app.use(cookieParser())
 const PORT = process.env.PORT || 5000;
 
 connectDb()
+
+
+app.get("/", (req, res) => {
+  console.log("ROOT HIT");
+  res.send("Hello");
+});
+
 app.use('/', auth)
 app.use('/api', Queation)
 

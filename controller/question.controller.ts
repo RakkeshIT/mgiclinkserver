@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import groq from "../config/groq";
+import { Questions } from "../models/queation";
 
 /*
 MODEL
@@ -7,7 +8,14 @@ MODEL
 1] llama-3.3-70b-versatile
 
 */
-export const Queation = async (req: Request, res: Response) => {
+interface AuthRequest extends Request {
+    user?: {
+        userId: string;
+        email: string;
+    };
+}
+
+export const Queation = async (req: AuthRequest, res: Response) => {
     try {
         const { role,
             experience,
@@ -17,6 +25,11 @@ export const Queation = async (req: Request, res: Response) => {
             experience,
             difficulty,
             numberOfQuestions,);
+
+        const userId = req.user?.userId;
+
+        console.log("User Id: ", userId);
+
 
         const completion = await groq.chat.completions.create({
             model: "llama-3.3-70b-versatile",
@@ -48,6 +61,7 @@ export const Queation = async (req: Request, res: Response) => {
 
         const content =
             completion.choices?.[0]?.message?.content;
+
         if (!content) {
             return res.status(500).json({
                 success: false,
@@ -58,7 +72,23 @@ export const Queation = async (req: Request, res: Response) => {
             content || "{}"
         );
 
-        return res.status(200).json({ success: true, questions: parsedData.questions})
+        // Model
+
+        const queations = new Questions({
+            userId,
+            user_query:{
+                role,
+                experience,
+                difficulty,
+                numberOfQuestions,
+            },
+            questions:
+                parsedData.questions
+        })
+
+        queations.save()
+        
+        return res.status(200).json({ success: true, storedId: queations._id, data: parsedData })
     } catch (error) {
         return res.status(500).json({ message: "Internel servel error", error: error })
     }

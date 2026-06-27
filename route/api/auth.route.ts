@@ -11,7 +11,11 @@ dotenv.config();
 const router = Router();
 
 router.post("/login", async (req: Request, res: Response) => {
+  console.log("LOGIN HIT");
+  
   try {
+    console.log("Body: ", req.body);
+    
     const { email } = req.body;
 
     if (!email) {
@@ -25,7 +29,7 @@ router.post("/login", async (req: Request, res: Response) => {
 
     const token = generateToken();
     const publicId = crypto.randomUUID();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 10 mins
 
     await Token.create({
       userId: user._id,
