@@ -9,25 +9,30 @@ interface JWT_PAYLOAD {
 interface AuthRequest extends Request {
     user?: JWT_PAYLOAD
 }
-export const authmiddleware = (req: AuthRequest, res: Response, next: NextFunction): void => {
+export const authmiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const token = req.cookies.auth_token
-        if(!token) {
+        if (!token) {
             console.log("Token Unavialable");
+            return res.status(401).json({
+                message: "Token unavailable",
+            });
         }
 
         const decoded = jwt.verify(
-            token, 
+            token,
             process.env.JWT_SECRET!
         ) as JWT_PAYLOAD;
 
         console.log("Decoded from Middleware: ", decoded);
-        
+
 
         req.user = decoded
 
         next()
     } catch (error) {
-        res.status(401).json({message: "Unauthorized"})
+        return res.status(401).json({
+            message: "Unauthorized",
+        });
     }
 }
