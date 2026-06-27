@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import { jwtVerify } from 'jose';
 import { Request, Response, NextFunction } from 'express';
 
 interface JWT_PAYLOAD {
@@ -9,19 +9,26 @@ interface JWT_PAYLOAD {
 interface AuthRequest extends Request {
     user?: JWT_PAYLOAD
 }
-export const authmiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const authmiddleware = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const token = req.cookies?.auth_token
+
         if (!token) {
             return res.status(401).json({
                 message: "Token unavailable",
             });
         }
 
-        const decoded = jwt.verify(
-            token,
-            process.env.JWT_SECRET!
-        ) as JWT_PAYLOAD;
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+        const { payload } = await jwtVerify(token, secret, {
+            algorithms: ['HS256'] // specify your algorithm
+        });
+
+        const decoded: JWT_PAYLOAD = {
+            email: payload.email as string,
+            userId: payload.userId as string
+        };
+
 
         console.log("Decoded from Middleware: ", decoded);
 

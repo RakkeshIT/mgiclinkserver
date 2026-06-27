@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Router } from "express";
-import jwt from "jsonwebtoken";
+import {SignJWT } from "jose";
 import dotenv from "dotenv";
 import User from "../../models/User";
 import Token from "../../models/Token";
@@ -33,6 +33,7 @@ router.post("/login", async (req: Request, res: Response) => {
 
     await Token.create({
       userId: user._id,
+      email,
       token,
       public_id: publicId,
       expiresAt,
@@ -69,14 +70,16 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
     tokenDoc.used = true;
     await tokenDoc.save();
     if (!process.env.JWT_SECRET) {
-      return res.status(400).json({ message: "JWT_SECRET key Missing" });
       console.log("JWT_SECRET key Missing");
+      return res.status(400).json({ message: "JWT_SECRET key Missing" });
     }
-    const session = jwt.sign(
-      { userId: tokenDoc.userId },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1h" }
-    );
+
+    const session = await new SignJWT({ userId: tokenDoc.userId.toString(), email: tokenDoc.email })
+        .setProtectedHeader({ alg: 'HS256' })
+        .setIssuedAt()
+        .setExpirationTime('1h')
+        .sign(new TextEncoder().encode(process.env.JWT_SECRET as string));
+
     console.log("Generated Token:", session);
     console.log("SIGNUP HIT EXPRESS");
     return res
