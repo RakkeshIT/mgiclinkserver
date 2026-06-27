@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken'
 import { Request, Response, NextFunction } from 'express';
 
 interface JWT_PAYLOAD {
-    email: String
-    userId: String,
+    email: string
+    userId: string,
 }
 
 interface AuthRequest extends Request {
@@ -11,9 +11,8 @@ interface AuthRequest extends Request {
 }
 export const authmiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-        const token = req.cookies.auth_token
+        const token = req.cookies?.auth_token
         if (!token) {
-            console.log("Token Unavialable");
             return res.status(401).json({
                 message: "Token unavailable",
             });
@@ -29,7 +28,7 @@ export const authmiddleware = (req: AuthRequest, res: Response, next: NextFuncti
 
         req.user = decoded
 
-        next()
+        return next()
     } catch (error) {
         return res.status(401).json({
             message: "Unauthorized",
