@@ -2,11 +2,11 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser = require('cookie-parser')
-import { connectDb } from './utils/db.js'
+import { connectDb } from './utils/db'
 
 // API's
-import auth from './route/api/auth.route.js'
-import Queation from './route/api/queation.route.js'
+import auth from './route/api/auth.route'
+import Queation from './route/api/queation.route'
 
 dotenv.config()
 import './config/env.js'

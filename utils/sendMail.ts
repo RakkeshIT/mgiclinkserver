@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { emailTemplate } from '../services/emailTemplates.js'
+import { emailTemplate } from '../services/emailTemplates'
 
 
 const {EMAIL_USER, EMAIL_PASS, BASE_URL} = process.env

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import groq from "../config/groq.js";
-import { Questions } from "../models/queation.js";
+import groq from "../config/groq";
+import { Questions } from "../models/queation";
 
 /*
 MODEL

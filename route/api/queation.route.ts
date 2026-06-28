@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { Queation } from "../../controller/question.controller.js";
-import { authmiddleware } from "../../middleware.js";
+import { Queation } from "../../controller/question.controller";
+import { authmiddleware } from "../../middleware";
 
 const router = Router()
 

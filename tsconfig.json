@@ -7,9 +7,8 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "NodeNext",
+    "module": "commonjs",
     "target": "es2020",
-    "moduleResolution":"NodeNext",
     "types": [],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,    

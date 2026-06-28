@@ -1,21 +1,21 @@
 import { Request, Response } from "express";
 import { Router } from "express";
-import {SignJWT } from "jose";
+import { SignJWT } from "jose";
 import dotenv from "dotenv";
-import User from "../../models/User.js";
-import Token from "../../models/Token.js";
-import { generateToken } from "../../utils/generateToken.js";
-import { sendMail } from "../../utils/sendMail.js";
+import User from "../../models/User";
+import Token from "../../models/Token";
+import { generateToken } from "../../utils/generateToken";
+import { sendMail } from "../../utils/sendMail";
 import crypto from "crypto";
 dotenv.config();
 const router = Router();
 
 router.post("/login", async (req: Request, res: Response) => {
   console.log("LOGIN HIT");
-  
+
   try {
     console.log("Body: ", req.body);
-    
+
     const { email } = req.body;
 
     if (!email) {
@@ -75,16 +75,16 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
     }
 
     const session = await new SignJWT({ userId: tokenDoc.userId.toString(), email: tokenDoc.email })
-        .setProtectedHeader({ alg: 'HS256' })
-        .setIssuedAt()
-        .setExpirationTime('1h')
-        .sign(new TextEncoder().encode(process.env.JWT_SECRET as string));
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('1h')
+      .sign(new TextEncoder().encode(process.env.JWT_SECRET as string));
 
     console.log("Generated Token:", session);
     console.log("SIGNUP HIT EXPRESS");
     return res
       .status(200)
-      .json({ success: true, message: "Logged in", tokenDoc, accessToken:session });
+      .json({ success: true, message: "Logged in", tokenDoc, accessToken: session });
   } catch (error) {
     console.error("Unexpected error :", error);
     return res
