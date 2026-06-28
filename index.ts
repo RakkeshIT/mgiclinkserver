@@ -2,14 +2,14 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser = require('cookie-parser')
-import { connectDb } from './utils/db'
+import { connectDb } from './utils/db.js'
 
 // API's
-import auth from './route/api/auth.route'
-import Queation from './route/api/queation.route'
+import auth from './route/api/auth.route.js'
+import Queation from './route/api/queation.route.js'
 
 dotenv.config()
-import './config/env'
+import './config/env.js'
 
 const app = express()
 app.set("trust proxy", 1);
