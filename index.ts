@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import cookieParser = require('cookie-parser')
+import cookieParser from "cookie-parser"
 import { connectDb } from './utils/db'
 
 // API's
