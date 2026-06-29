@@ -82,6 +82,15 @@ router.get("/verify/:id", async (req: Request, res: Response) => {
 
     console.log("Generated Token:", session);
     console.log("SIGNUP HIT EXPRESS");
+
+    res.cookie("auth_token", session, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+      maxAge: 60 * 60 * 1000
+    });
+    
     return res
       .status(200)
       .json({ success: true, message: "Logged in", tokenDoc, accessToken: session });

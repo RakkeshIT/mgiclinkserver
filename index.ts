@@ -6,6 +6,7 @@ import { connectDb } from './utils/db.js'
 // API's
 import auth from './route/api/auth.route.js'
 import Queation from './route/api/queation.route.js'
+import GetQueations from './route/api/getqueations.route.js'
 
 dotenv.config()
 import './config/env.js'
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use('/', auth)
 app.use('/api', Queation)
+app.use('/api', GetQueations)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)  

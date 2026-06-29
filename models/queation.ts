@@ -1,4 +1,4 @@
-import mongoose, { Schema , Document} from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
 export interface IQuestion {
   id: number;
@@ -66,9 +66,6 @@ const questionSchema = new Schema<IInterview>(
   }
 );
 
-export const Questions =
+export const Questions: Model<IInterview> =
   mongoose.models.Questions ||
-  mongoose.model<IInterview>(
-    "Questions",
-    questionSchema
-  );
+  mongoose.model<IInterview>("Questions", questionSchema);
