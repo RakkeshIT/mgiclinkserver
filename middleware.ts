@@ -18,8 +18,13 @@ export const authmiddleware = async (req: AuthRequest, res: Response, next: Next
                 message: "Token unavailable",
             });
         }
+        if (!process.env.JWT_SECRET) {
+            console.error("JWT_SECRET missing in production!");
+            return res.status(500).json({ message: "Server config error" });
+        }
 
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        
         const { payload } = await jwtVerify(token, secret, {
             algorithms: ['HS256'] // specify your algorithm
         });
