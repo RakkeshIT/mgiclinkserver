@@ -146,7 +146,7 @@ Make sure you have these installed:
 **1. Clone & Install**
 
 ```bash
-git clone https://github.com/yourusername/magiclink-backend.git
+git clone https://github.com/RakkeshIT/mgiclinkserver.git
 cd magiclink-backend
 npm install
 ```
@@ -193,7 +193,7 @@ Server runs at → `http://localhost:5000` ✅
 **1. Clone & Install**
 
 ```bash
-git clone https://github.com/yourusername/magiclink-frontend.git
+git clone https://github.com/RakkeshIT/magiclinkfrontend.git
 cd magiclink-frontend
 npm install
 ```
